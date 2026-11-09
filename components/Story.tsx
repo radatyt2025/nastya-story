@@ -105,7 +105,7 @@ function FloatingLights() {
 }
 function CinemaScene() {
   const rm=useReducedMotion();
-  return <section id="ch3" className="relative overflow-hidden bg-[#0d0b12] px-5 py-28 text-ivory sm:px-10">
+  return <section id="ch3" className="relative overflow-hidden bg-[#0d0b12] px-5 py-28 text-ivory sm:px-10 cinematic-chapter"><Atmosphere kind="stars"/>
     <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(ellipse_at_top,rgba(255,236,190,.22),transparent_70%)]"/>
     <div className="mx-auto max-w-5xl">
       <p className="mb-5 text-center text-xs uppercase tracking-[.4em] text-gold/70">Сцена третя · Наше кіно</p>
@@ -127,7 +127,7 @@ function CinemaScene() {
 }
 function ParkScene() {
   const rm=useReducedMotion();
-  return <section id="park" className="relative overflow-hidden bg-[#151b23] px-5 py-28 text-ivory sm:px-10">
+  return <section id="park" className="relative overflow-hidden bg-[#151b23] px-5 py-28 text-ivory sm:px-10 cinematic-chapter"><Atmosphere kind="stars"/>
     <FloatingLights/>
     <div className="relative mx-auto max-w-5xl">
       <p className="mb-5 text-xs uppercase tracking-[.35em] text-gold/70">Сцена друга · Стрийський парк</p>
@@ -148,6 +148,28 @@ function ParkScene() {
       </motion.div>
     </div>
   </section>;
+}
+
+
+/* ---------- Атмосферні шари: легкі CSS-анімації, без додаткових фото ---------- */
+function Atmosphere({ kind='rose' }: {kind?:'rose'|'stars'|'gold'}) {
+ const rm=useReducedMotion();
+ return <div aria-hidden="true" className={`story-atmosphere story-atmosphere--${kind}`}>
+   <div className="story-atmosphere__aurora"/>
+   {!rm && Array.from({length:16},(_,i)=><motion.i key={i}
+     className="story-atmosphere__spark"
+     style={{left:`${(i*43+9)%100}%`,top:`${(i*29+7)%95}%`,width:2+i%4,height:2+i%4}}
+     animate={{opacity:[0,.85,0],y:[12,-35,12],scale:[.7,1.6,.7]}}
+     transition={{duration:3.5+i%5,delay:i*.27,repeat:Infinity,ease:'easeInOut'}}/>)}
+ </div>;
+}
+function ChapterTransition({label}:{label:string}) {
+ const rm=useReducedMotion();
+ return <div className="chapter-transition" aria-hidden="true">
+  <motion.div initial={rm?false:{scaleX:0,opacity:0}} whileInView={{scaleX:1,opacity:1}} viewport={{once:true}} transition={{duration:1.5,ease}} className="chapter-transition__line"/>
+  <motion.span initial={rm?false:{opacity:0,y:15,letterSpacing:'.7em'}} whileInView={{opacity:1,y:0,letterSpacing:'.32em'}} viewport={{once:true}} transition={{duration:1.4}}>{label}</motion.span>
+  <motion.div initial={rm?false:{scaleX:0,opacity:0}} whileInView={{scaleX:1,opacity:1}} viewport={{once:true}} transition={{duration:1.5,ease}} className="chapter-transition__line"/>
+ </div>;
 }
 
 /* ---------- табло ---------- */
@@ -188,7 +210,7 @@ function Invitation() {
   const [time,setTime]=useState('18:00');
   const rm=useReducedMotion();
   return <section id="ch8" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#180d19] px-5 py-28 text-center text-ivory">
-    <FloatingLights/>
+    <FloatingLights/><Atmosphere kind="rose"/>
     <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(125,45,77,.55),transparent_70%)]"/>
     <div className="relative mx-auto w-full max-w-xl">
       <motion.p initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="mb-5 text-xs uppercase tracking-[.35em] text-gold">Для тебе, Настю</motion.p>
@@ -264,7 +286,7 @@ export default function Story() {
 
       {/* 00 */}
       <section id="ch0" className="relative grid min-h-[100svh] place-items-center overflow-hidden bg-night px-6 text-center">
-        <div className="beam absolute inset-0" aria-hidden />
+        <div className="beam absolute inset-0" aria-hidden /><Atmosphere kind="stars"/>
         <div className="relative max-w-2xl">
           <motion.h1 initial={{ opacity: 0, filter: 'blur(14px)', letterSpacing: '.08em' }} animate={{ opacity: 1, filter: 'blur(0px)', letterSpacing: '0em' }} transition={{ duration: 2.4, ease }}
             className="font-serif text-[2.5rem] font-medium italic leading-[1.1] sm:text-6xl">Настю, я хочу тобі дещо розповісти…</motion.h1>
@@ -276,7 +298,7 @@ export default function Story() {
       </section>
 
       {/* 01 — перша зустріч */}
-      <Sec id="ch1" bg="bg-wine">
+      <Sec id="ch1" bg="bg-wine cinematic-chapter cinematic-chapter--wine"><Atmosphere kind="gold"/>
         <p className="mb-6 text-xs uppercase tracking-[.35em] text-gold/80">Сцена перша · Перша зустріч</p>
         <Title>Все почалося з однієї зустрічі</Title>
         <div className="mt-12 grid gap-12 md:grid-cols-2 md:items-center">
@@ -297,7 +319,7 @@ export default function Story() {
       <ParkScene />
 
       {/* 02 */}
-      <Sec id="ch2" bg="bg-ivory text-wine">
+      <ChapterTransition label="Наші маленькі моменти"/><Sec id="ch2" bg="bg-ivory text-wine cinematic-chapter cinematic-chapter--paper"><Atmosphere kind="rose"/>
         <Title>Маленькі моменти. Великі почуття.</Title>
         <div className="mt-10 grid grid-cols-6 gap-3 sm:gap-6">
           <div className="col-span-4 -rotate-2"><Ph k="letter" /></div>
@@ -311,10 +333,10 @@ export default function Story() {
         </div>
       </Sec>
 
-      <CinemaScene />
+      <ChapterTransition label="Магія великого екрана"/><CinemaScene />
 
       {/* 04 */}
-      <Sec id="ch4" bg="bg-wine">
+      <ChapterTransition label="Гра, яку я програв із задоволенням"/><Sec id="ch4" bg="bg-wine cinematic-chapter cinematic-chapter--wine"><Atmosphere kind="gold"/>
         <Title cls="text-center">Футбол 0 : 1 Настя</Title>
         <div className="mt-10"><Scoreboard /></div>
         <Line cls="mt-8 text-center text-lg text-ivory/80">Переможець був очевидний ще до початку гри.</Line>
@@ -325,7 +347,7 @@ export default function Story() {
       </Sec>
 
       {/* 05 */}
-      <Sec id="ch5" bg="bg-ivory text-wine">
+      <ChapterTransition label="Створено удвох"/><Sec id="ch5" bg="bg-ivory text-wine cinematic-chapter cinematic-chapter--paper"><Atmosphere kind="rose"/>
         <Title>Двоє маленьких ведмедиків</Title>
         <div className="relative mt-10 grid gap-6 md:grid-cols-5">
           <motion.div initial={rm?false:{opacity:0,x:-100,rotate:-12}} whileInView={{opacity:1,x:0,rotate:-3}} viewport={{once:true}} transition={{duration:1.3,ease}} className="md:col-span-2"><Ph k="art" cls="rounded-2xl" /></motion.div>
@@ -338,7 +360,7 @@ export default function Story() {
       </Sec>
 
       {/* 06 */}
-      <Sec id="ch6" bg="bg-night">
+      <ChapterTransition label="Те, що залишиться з нами"/><Sec id="ch6" bg="bg-night cinematic-chapter"><Atmosphere kind="stars"/>
         <Title>Моменти, які хочеться зупинити</Title>
         <div className="mt-10 -mx-5 sm:mx-0"><Para amt={30}><div className="[&_button]:!shadow-[0_0_80px_-20px_rgba(216,164,178,.5)]"><Ph k="bw" sizes="100vw" /></div></Para></div>
         <div className="relative mt-12 grid grid-cols-6 gap-3">
@@ -352,7 +374,7 @@ export default function Story() {
       </Sec>
 
       {/* 07 */}
-      <section id="ch7" className="grid min-h-[100svh] place-items-center bg-black px-6 py-20 text-center">
+      <section id="ch7" className="relative grid min-h-[100svh] place-items-center overflow-hidden bg-black px-6 py-20 text-center"><Atmosphere kind="stars"/>
         <div className="max-w-xl">
           <div className="min-h-[22rem] space-y-6 font-serif text-3xl leading-snug sm:text-4xl" aria-live="polite">
             {L7.slice(0, step + 1).map((t, i) => <motion.p key={t} initial={{ opacity: 0, y: 12 }} animate={{ opacity: i === step ? 1 : .35, y: 0 }} transition={{ duration: 1.6, ease }}>{t}</motion.p>)}
