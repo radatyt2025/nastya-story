@@ -7,8 +7,8 @@ import { P } from '@/lib/photos';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const crop: Record<string, string> = {
-  bq1: '50% 47%', bq2: '50% 47%', bereal: '50% 62%',
-  roses: '50% 54%', real2: '50% 48%'
+  bq1: '50% 67%', bq2: '50% 67%', bereal: '50% 62%',
+  roses: '50% 75%', real2: '50% 48%'
 };
 const Open = createContext<(k: string) => void>(() => {});
 
@@ -22,7 +22,7 @@ function Ph({ k, cls = '', ratio, pos = 'center', rot = 0, priority = false, siz
       viewport={{ once: true, margin: '-8%' }} transition={{ duration: 1.3, ease }}
       style={{ aspectRatio: ratio ?? `${p.w}/${p.h}` }}
       className={`relative block w-full overflow-hidden bg-black/30 shadow-[0_24px_60px_-20px_rgba(0,0,0,.7)] ${cls}`}>
-      <Image src={`/photos/${p.f}`} alt={p.alt} fill sizes={sizes} priority={priority} className="object-cover" style={{ objectPosition: crop[k] ?? pos, transform: crop[k] ? 'scale(1.24)' : undefined }} />
+      <Image src={`/photos/${p.f}`} alt={p.alt} fill sizes={sizes} priority={priority} className="object-cover" style={{ objectPosition: crop[k] ?? pos, transform: ['bq1','bq2','roses'].includes(k) ? 'scale(1.5)' : crop[k] ? 'scale(1.24)' : undefined }} />
     </motion.button>
   );
 }
@@ -49,7 +49,11 @@ function Lightbox({ k, onClose }: { k: string | null; onClose: () => void }) {
     <AnimatePresence>{k && (
       <motion.div key="lb" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} role="dialog" aria-modal="true" aria-label={P[k].alt}
         onClick={onClose} className="fixed inset-0 z-[70] bg-night/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
-        <div className="relative h-full w-full"><Image src={`/photos/${P[k].f}`} alt={P[k].alt} fill sizes="100vw" className="object-contain" /></div>
+        <div className="relative mx-auto h-full w-full max-w-3xl overflow-hidden">
+          <Image src={`/photos/${P[k].f}`} alt={P[k].alt} fill sizes="100vw"
+            className={['bq1','bq2','roses'].includes(k) ? 'object-cover' : 'object-contain'}
+            style={['bq1','bq2','roses'].includes(k) ? {objectPosition:crop[k],transform:'scale(1.5)'} : undefined}/>
+        </div>
         <button aria-label="Закрити" onClick={onClose} className="absolute right-4 top-[max(1rem,env(safe-area-inset-top))] grid h-12 w-12 place-items-center rounded-full bg-night/70 text-2xl text-ivory ring-1 ring-gold/40">×</button>
       </motion.div>)}
     </AnimatePresence>
@@ -178,22 +182,11 @@ function Burst() {
 
 
 /* ---------- Запрошення: вибір середи та часу ---------- */
-const WEDNESDAYS = [
-  {value:'2026-11-11',label:'11 листопада'},
-  {value:'2026-11-18',label:'18 листопада'},
-  {value:'2026-11-25',label:'25 листопада'}
-];
 const HOURS = ['17:00','17:30','18:00','18:30','19:00','19:30','20:00'];
 function Invitation() {
   const [opened,setOpened]=useState(false);
-  const [date,setDate]=useState('2026-11-11');
   const [time,setTime]=useState('18:00');
-  const [copied,setCopied]=useState(false);
   const rm=useReducedMotion();
-  const day=WEDNESDAYS.find(d=>d.value===date)?.label ?? date;
-  const message=`Привіт! Я обираю нашу зустріч у середу, ${day}, о ${time} ♡`;
-  const share=()=>{ window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(message)}`,'_blank','noopener,noreferrer'); };
-  const copy=async()=>{try{await navigator.clipboard.writeText(message);setCopied(true);}catch{setCopied(false);}};
   return <section id="ch8" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#180d19] px-5 py-28 text-center text-ivory">
     <FloatingLights/>
     <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(125,45,77,.55),transparent_70%)]"/>
@@ -212,20 +205,20 @@ function Invitation() {
         className="mx-auto mt-12 rounded-[2rem] border border-gold/50 bg-[#f6f0e8] p-6 text-[#4a1728] shadow-[0_30px_100px_rgba(0,0,0,.5)] sm:p-9">
         <p className="font-hand text-3xl">Наш наступний розділ</p>
         <p className="mt-4 font-serif text-3xl italic">Побачимось у середу?</p>
-        <fieldset className="mt-8">
-          <legend className="mb-3 text-sm font-medium">Обери дату — середу</legend>
-          <div className="grid grid-cols-3 gap-2">{WEDNESDAYS.map(d=><button key={d.value} type="button" onClick={()=>setDate(d.value)}
-            aria-pressed={date===d.value} className={`min-h-14 rounded-xl border px-2 py-3 text-sm transition-colors ${date===d.value?'border-wine bg-wine text-ivory':'border-wine/20 bg-white/60'}`}>{d.label}</button>)}</div>
-        </fieldset>
+        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:.25}} className="mt-8 rounded-2xl border border-wine/20 bg-white/60 px-5 py-5">
+          <p className="text-xs uppercase tracking-[.3em] text-wine/60">Наш день</p>
+          <p className="mt-2 font-serif text-3xl italic">Середа, 11 листопада</p>
+        </motion.div>
         <fieldset className="mt-7">
           <legend className="mb-3 text-sm font-medium">О котрій годині тобі зручно?</legend>
           <div className="grid grid-cols-3 gap-2">{HOURS.map(t=><button key={t} type="button" onClick={()=>setTime(t)}
             aria-pressed={time===t} className={`min-h-12 rounded-xl border text-sm transition-colors ${time===t?'border-wine bg-wine text-ivory':'border-wine/20 bg-white/60'}`}>{t}</button>)}</div>
         </fieldset>
-        <p className="mt-6 font-serif text-xl">Середа, {day} · {time}</p>
-        <button type="button" onClick={share} className="mt-6 min-h-14 w-full rounded-full bg-wine px-5 font-medium text-ivory">Надіслати вибір у Telegram ↗</button>
-        <button type="button" onClick={copy} className="mt-3 min-h-12 w-full rounded-full border border-wine/30 px-5 text-sm">{copied?'Скопійовано ✓':'Скопіювати запрошення'}</button>
-        <p className="mt-4 text-xs leading-relaxed text-wine/60">Вибір не надсилається автоматично — підтверди повідомлення у Telegram.</p>
+        <motion.div key={time} initial={{opacity:0,scale:.92}} animate={{opacity:1,scale:1}} className="mt-8 rounded-2xl bg-wine px-5 py-6 text-ivory">
+          <p className="text-xs uppercase tracking-[.25em] text-ivory/70">Наше наступне побачення</p>
+          <p className="mt-2 font-serif text-3xl italic">Середа · 11 листопада · {time}</p>
+          <p className="mt-3 text-sm text-ivory/75">Я чекатиму на тебе ♡</p>
+        </motion.div>
       </motion.div>}
     </div>
   </section>;
