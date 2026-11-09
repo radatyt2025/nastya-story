@@ -6,6 +6,10 @@ import Lenis from 'lenis';
 import { P } from '@/lib/photos';
 
 const ease = [0.22, 1, 0.36, 1] as const;
+const crop: Record<string, string> = {
+  bq1: '50% 47%', bq2: '50% 47%', bereal: '50% 62%',
+  roses: '50% 54%', real2: '50% 48%'
+};
 const Open = createContext<(k: string) => void>(() => {});
 
 /* ---------- базові елементи ---------- */
@@ -14,11 +18,11 @@ function Ph({ k, cls = '', ratio, pos = 'center', rot = 0, priority = false, siz
   const p = P[k]; const open = useContext(Open); const rm = useReducedMotion();
   return (
     <motion.button type="button" onClick={() => open(k)} aria-label={`Відкрити фото: ${p.alt}`}
-      initial={rm ? false : { clipPath: 'inset(0 0 100% 0)' }} whileInView={{ clipPath: 'inset(0 0 0% 0)' }}
+      initial={rm ? false : { opacity: 0, y: 70, rotate: rot - 6, scale: .82, filter: 'blur(10px)' }} whileInView={{ opacity: 1, y: 0, rotate: rot, scale: 1, filter: 'blur(0px)' }} whileTap={{ scale: .97 }}
       viewport={{ once: true, margin: '-8%' }} transition={{ duration: 1.3, ease }}
-      style={{ rotate: rot, aspectRatio: ratio ?? `${p.w}/${p.h}` }}
+      style={{ aspectRatio: ratio ?? `${p.w}/${p.h}` }}
       className={`relative block w-full overflow-hidden bg-black/30 shadow-[0_24px_60px_-20px_rgba(0,0,0,.7)] ${cls}`}>
-      <Image src={`/photos/${p.f}`} alt={p.alt} fill sizes={sizes} priority={priority} className="object-cover" style={{ objectPosition: pos }} />
+      <Image src={`/photos/${p.f}`} alt={p.alt} fill sizes={sizes} priority={priority} className="object-cover" style={{ objectPosition: crop[k] ?? pos, transform: crop[k] ? 'scale(1.24)' : undefined }} />
     </motion.button>
   );
 }
@@ -49,6 +53,38 @@ function Lightbox({ k, onClose }: { k: string | null; onClose: () => void }) {
         <button aria-label="Закрити" onClick={onClose} className="absolute right-4 top-[max(1rem,env(safe-area-inset-top))] grid h-12 w-12 place-items-center rounded-full bg-night/70 text-2xl text-ivory ring-1 ring-gold/40">×</button>
       </motion.div>)}
     </AnimatePresence>
+  );
+}
+
+/* ---------- Інтерактивний фотоальбом з явними кнопками ---------- */
+function Album({ keys, title }: { keys: string[]; title: string }) {
+  const [page, setPage] = useState(0);
+  const rm = useReducedMotion();
+  const prev = () => setPage(i => (i - 1 + keys.length) % keys.length);
+  const next = () => setPage(i => (i + 1) % keys.length);
+  return (
+    <div className="mx-auto mt-12 max-w-md px-5">
+      <div className="relative rounded-[1.5rem] border border-gold/30 bg-[#261c22] p-3 pb-5 shadow-[0_25px_100px_rgba(0,0,0,.55)]">
+        <div className="mb-3 flex items-center justify-between px-2 text-xs tracking-[.2em] text-gold/80">
+          <span>{title}</span><span className="tabular-nums">{page + 1} / {keys.length}</span>
+        </div>
+        <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-black/50">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div key={keys[page]} initial={rm ? false : { opacity: 0, rotateY: -22, x: 50, scale: .92 }}
+              animate={{ opacity: 1, rotateY: 0, x: 0, scale: 1 }} exit={rm ? { opacity: 0 } : { opacity: 0, rotateY: 18, x: -40, scale: .96 }}
+              transition={{ duration: rm ? .1 : .65, ease }} className="absolute inset-0">
+              <Ph k={keys[page]} ratio="4/5" cls="h-full rounded-lg" sizes="90vw" />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <button type="button" onClick={prev} aria-label="Попереднє фото" className="grid h-12 w-12 place-items-center rounded-full border border-gold/60 text-2xl text-gold">←</button>
+          <div className="flex gap-2" aria-label="Сторінки альбому">{keys.map((_,i)=><button key={i} onClick={()=>setPage(i)} aria-label={`Фото ${i+1}`} className={`h-2 rounded-full transition-all ${i===page?'w-7 bg-gold':'w-2 bg-gold/30'}`}/>)}</div>
+          <button type="button" onClick={next} aria-label="Наступне фото" className="grid h-12 w-12 place-items-center rounded-full border border-gold/60 text-2xl text-gold">→</button>
+        </div>
+        <p className="mt-3 text-center text-xs tracking-widest text-ivory/60">Гортай наші спогади стрілками</p>
+      </div>
+    </div>
   );
 }
 
@@ -145,7 +181,7 @@ export default function Story() {
               <Ph k="bq1" ratio="1/1" pos="50% 52%" cls="!rounded-full ring-1 ring-gold/50" sizes="45vw" />
               <Ph k="bq2" ratio="1/1" pos="50% 52%" cls="!rounded-full ring-1 ring-gold/50" sizes="45vw" />
             </div>
-            <p className="font-hand text-xl text-gold">Перший букет — торкнися, щоб побачити оригінал</p>
+            <p className="font-hand text-xl text-gold">Наш перший букет ♡</p>
           </div>
         </div>
       </Sec>
@@ -169,9 +205,7 @@ export default function Story() {
       <section id="ch3" className="relative bg-night py-24 sm:py-32">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-black sm:h-16" aria-hidden /><div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-black sm:h-16" aria-hidden />
         <div className="mx-auto max-w-5xl px-5 sm:px-10"><Title>Наше кіно</Title></div>
-        <div className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-6 sm:px-10 [scrollbar-width:none]" role="region" aria-label="Кадри нашого кіно">
-          {['dome', 'bereal', 'bw', 'domeSelfie', 'sf'].map((k) => <div key={k} className="w-[72vw] max-w-sm shrink-0 snap-center sm:w-72"><Ph k={k} sizes="75vw" /></div>)}
-        </div>
+        <Album keys={['dome', 'bereal', 'bw', 'domeSelfie', 'sf']} title="Кадри нашого кіно" />
         <div className="mx-auto mt-10 max-w-md space-y-4 px-5 text-center">
           <Line cls="text-lg text-ivory/75">Ми дивилися різні фільми.</Line>
           <Line d={.3} cls="font-serif text-3xl italic leading-snug">Але моя улюблена історія весь цей час була поруч зі мною.</Line>
