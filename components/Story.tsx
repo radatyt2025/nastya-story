@@ -40,7 +40,7 @@ function Line({ children, cls = '', d = 0 }: { children: ReactNode; cls?: string
 const Title = ({ children, cls = '' }: { children: ReactNode; cls?: string }) =>
   <h2 className={`font-serif text-[2.6rem] font-medium leading-[1.05] tracking-tight sm:text-6xl ${cls}`}>{children}</h2>;
 const Sec = ({ id, bg, children, cls = '' }: { id: string; bg: string; children: ReactNode; cls?: string }) =>
-  <section id={id} className={`relative px-5 py-24 sm:px-10 sm:py-32 ${bg} ${cls}`}><div className="mx-auto max-w-5xl">{children}</div></section>;
+  <section id={id} className={`relative isolate overflow-hidden px-5 py-24 sm:px-10 sm:py-32 ${bg} ${cls}`}><div className="relative z-10 mx-auto max-w-5xl">{children}</div></section>;
 
 /* ---------- лайтбокс ---------- */
 function Lightbox({ k, onClose }: { k: string | null; onClose: () => void }) {
@@ -176,8 +176,8 @@ function ChapterTransition({label}:{label:string}) {
 function Scoreboard() {
   const ref = useRef(null); const inV = useInView(ref, { once: true, margin: '-20%' });
   return (
-    <div ref={ref} className="mx-auto w-full max-w-xl rounded-sm border border-gold/50 bg-night p-5 text-center shadow-[0_0_60px_-10px_rgba(217,188,138,.35)]">
-      <p className="text-sm tracking-widest text-gold/80">Повний час</p>
+    <div ref={ref} className="mx-auto w-full max-w-2xl bg-transparent px-1 py-8 text-center sm:px-6">
+      <p className="mb-5 text-xs uppercase tracking-[.35em] text-gold/70">Повний час · наш матч</p>
       <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-6">
         <span className="font-serif text-2xl font-semibold sm:text-4xl">Футбол</span>
         <div className="flex items-center gap-2 font-serif text-6xl font-semibold tabular-nums sm:text-8xl">
@@ -336,9 +336,8 @@ export default function Story() {
       <ChapterTransition label="Магія великого екрана"/><CinemaScene />
 
       {/* 04 */}
-      <ChapterTransition label="Гра, яку я програв із задоволенням"/><Sec id="ch4" bg="bg-wine cinematic-chapter cinematic-chapter--wine"><Atmosphere kind="gold"/>
-        <Title cls="text-center">Футбол 0 : 1 Настя</Title>
-        <div className="mt-10"><Scoreboard /></div>
+      <ChapterTransition label="Гра, яку я програв із задоволенням"/><Sec id="ch4" bg="bg-wine cinematic-chapter cinematic-chapter--wine">
+        <div className="mt-2"><Scoreboard /></div>
         <Line cls="mt-8 text-center text-lg text-ivory/80">Переможець був очевидний ще до початку гри.</Line>
         <div className="relative mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
           {['stadium', 'scarves', 'bqFoot', 'hug', 'real', 'real2'].map((k, i) => <motion.div key={k} initial={rm?false:{opacity:0,y:100,rotate:i%2?9:-9,scale:.8}} whileInView={{opacity:1,y:0,rotate:i%2?3:-3,scale:1}} viewport={{once:true,amount:.25}} transition={{duration:1.1,delay:(i%3)*.12,ease}} className={i % 2 ? 'mt-8' : ''}><Ph k={k} ratio="3/4" cls="rounded-xl ring-1 ring-gold/20" sizes="45vw" /></motion.div>)}
