@@ -205,7 +205,7 @@ export default function Story() {
       <section id="ch3" className="relative bg-night py-24 sm:py-32">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-black sm:h-16" aria-hidden /><div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-black sm:h-16" aria-hidden />
         <div className="mx-auto max-w-5xl px-5 sm:px-10"><Title>Наше кіно</Title></div>
-        <Album keys={['dome', 'bereal', 'bw', 'domeSelfie', 'sf']} title="Кадри нашого кіно" />
+        <Album keys={['dome', 'bereal', 'bw', 'domeSelfie']} title="Кадри нашого кіно" />
         <div className="mx-auto mt-10 max-w-md space-y-4 px-5 text-center">
           <Line cls="text-lg text-ivory/75">Ми дивилися різні фільми.</Line>
           <Line d={.3} cls="font-serif text-3xl italic leading-snug">Але моя улюблена історія весь цей час була поруч зі мною.</Line>
