@@ -88,6 +88,64 @@ function Album({ keys, title }: { keys: string[]; title: string }) {
   );
 }
 
+
+/* ---------- Мобільні кінематографічні сцени ---------- */
+function FloatingLights() {
+  const rm = useReducedMotion();
+  return <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+    {Array.from({length:13},(_,i)=><motion.span key={i} className="absolute rounded-full bg-amber-200/30 blur-[3px]"
+      style={{left:`${(i*37)%100}%`,top:`${(i*23)%90}%`,width: i%3===0?12:5,height:i%3===0?12:5}}
+      animate={rm?{}:{opacity:[.15,.65,.15],y:[0,-24,0],scale:[1,1.4,1]}}
+      transition={{duration:3+i%5,repeat:Infinity,delay:i*.31}} />)}
+  </div>;
+}
+function CinemaScene() {
+  const rm=useReducedMotion();
+  return <section id="ch3" className="relative overflow-hidden bg-[#0d0b12] px-5 py-28 text-ivory sm:px-10">
+    <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(ellipse_at_top,rgba(255,236,190,.22),transparent_70%)]"/>
+    <div className="mx-auto max-w-5xl">
+      <p className="mb-5 text-center text-xs uppercase tracking-[.4em] text-gold/70">Сцена третя · Наше кіно</p>
+      <motion.div initial={rm?false:{opacity:0,scale:.85,filter:'blur(14px)'}} whileInView={{opacity:1,scale:1,filter:'blur(0px)'}} viewport={{once:true}} transition={{duration:1.2}}>
+        <Title cls="text-center">У кожної історії є свої кадри</Title>
+      </motion.div>
+      <div className="relative mx-auto mt-12 max-w-xl">
+        <motion.div aria-hidden className="pointer-events-none absolute -inset-5 rounded-[2rem] border border-gold/20 shadow-[0_0_90px_rgba(217,188,138,.13)]"
+          animate={rm?{}:{boxShadow:['0 0 30px rgba(217,188,138,.08)','0 0 90px rgba(217,188,138,.2)','0 0 30px rgba(217,188,138,.08)']}}
+          transition={{duration:5,repeat:Infinity}}/>
+        <Album keys={['bereal','dome','bw','domeSelfie']} title="Наші кадри" />
+      </div>
+      <div className="mx-auto mt-16 max-w-md space-y-5 text-center">
+        <Line cls="text-lg text-ivory/70">Ми дивилися різні фільми.</Line>
+        <Line cls="font-serif text-3xl italic leading-snug">Але моя улюблена історія весь цей час була поруч зі мною.</Line>
+      </div>
+    </div>
+  </section>;
+}
+function ParkScene() {
+  const rm=useReducedMotion();
+  return <section id="park" className="relative overflow-hidden bg-[#151b23] px-5 py-28 text-ivory sm:px-10">
+    <FloatingLights/>
+    <div className="relative mx-auto max-w-5xl">
+      <p className="mb-5 text-xs uppercase tracking-[.35em] text-gold/70">Сцена друга · Стрийський парк</p>
+      <Title>Трохи вечірнього світла. І ти.</Title>
+      <Line cls="mt-6 max-w-md font-serif text-2xl italic text-ivory/75">Іноді для особливого вечора достатньо просто бути поруч.</Line>
+      <div className="relative mx-auto mt-16 max-w-lg pb-20">
+        <motion.div initial={rm?false:{opacity:0,x:-110,rotate:-16}} whileInView={{opacity:1,x:0,rotate:-7}} viewport={{once:true}} transition={{duration:1.1,ease}}
+          className="relative w-[78%] rounded-xl border-[7px] border-ivory bg-ivory p-1 shadow-2xl">
+          <Ph k="night1" ratio="3/4" cls="rounded-sm" />
+        </motion.div>
+        <motion.div initial={rm?false:{opacity:0,x:120,rotate:17}} whileInView={{opacity:1,x:0,rotate:8}} viewport={{once:true}} transition={{duration:1.2,delay:.3,ease}}
+          className="absolute right-0 top-[28%] w-[66%] rounded-xl border-[7px] border-ivory bg-ivory p-1 shadow-2xl">
+          <Ph k="night2" ratio="3/4" cls="rounded-sm"/>
+        </motion.div>
+      </div>
+      <motion.div initial={rm?false:{opacity:0,y:70,scale:.8}} whileInView={{opacity:1,y:0,scale:1}} viewport={{once:true}} transition={{duration:1.2}} className="mx-auto max-w-sm">
+        <Ph k="night3" ratio="4/5" cls="rounded-2xl"/>
+      </motion.div>
+    </div>
+  </section>;
+}
+
 /* ---------- табло ---------- */
 function Scoreboard() {
   const ref = useRef(null); const inV = useInView(ref, { once: true, margin: '-20%' });
@@ -169,22 +227,26 @@ export default function Story() {
         </div>
       </section>
 
-      {/* 01 */}
+      {/* 01 — перша зустріч */}
       <Sec id="ch1" bg="bg-wine">
+        <p className="mb-6 text-xs uppercase tracking-[.35em] text-gold/80">Сцена перша · Перша зустріч</p>
         <Title>Все почалося з однієї зустрічі</Title>
-        <div className="mt-10 grid gap-10 md:grid-cols-2 md:items-center">
-          <Para><Ph k="venue" ratio="3/4" pos="50% 40%" /></Para>
+        <div className="mt-12 grid gap-12 md:grid-cols-2 md:items-center">
+          <motion.div initial={rm?false:{opacity:0,scale:1.2,filter:'blur(15px)'}} whileInView={{opacity:1,scale:1,filter:'blur(0px)'}} viewport={{once:true}} transition={{duration:1.7,ease}}>
+            <Para><Ph k="venue" ratio="3/4" pos="50% 40%" cls="rounded-t-[9rem] rounded-b-2xl" /></Para>
+          </motion.div>
           <div className="space-y-8">
-            <Line cls="font-serif text-2xl leading-snug text-ivory sm:text-3xl">Тоді я ще не знав, скільки всього змінить одна зустріч.</Line>
+            <Line cls="font-serif text-2xl leading-snug sm:text-3xl">Тоді я ще не знав, скільки всього змінить одна зустріч.</Line>
             <Line cls="text-lg leading-relaxed text-ivory/80">Я просто хотів побачити тебе. А виявилося, що захочу бачити знову і знову.</Line>
-            <div className="grid grid-cols-2 gap-4">
-              <Ph k="bq1" ratio="1/1" pos="50% 52%" cls="!rounded-full ring-1 ring-gold/50" sizes="45vw" />
-              <Ph k="bq2" ratio="1/1" pos="50% 52%" cls="!rounded-full ring-1 ring-gold/50" sizes="45vw" />
+            <div className="relative flex items-center justify-center gap-0 py-8">
+              <motion.div initial={rm?false:{opacity:0,x:-100,rotate:-25}} whileInView={{opacity:1,x:0,rotate:-9}} viewport={{once:true}} transition={{duration:1.2,delay:.2}} className="relative z-10 w-[58%] rounded-xl border-[6px] border-ivory bg-ivory p-1 shadow-2xl"><Ph k="bq1" ratio="3/4"/></motion.div>
+              <motion.div initial={rm?false:{opacity:0,x:100,rotate:25}} whileInView={{opacity:1,x:0,rotate:10}} viewport={{once:true}} transition={{duration:1.2,delay:.5}} className="relative -ml-10 mt-12 w-[58%] rounded-xl border-[6px] border-ivory bg-ivory p-1 shadow-2xl"><Ph k="bq2" ratio="3/4"/></motion.div>
             </div>
-            <p className="font-hand text-xl text-gold">Наш перший букет ♡</p>
+            <p className="text-center font-hand text-2xl text-gold">Перший букет ♡</p>
           </div>
         </div>
       </Sec>
+      <ParkScene />
 
       {/* 02 */}
       <Sec id="ch2" bg="bg-ivory text-wine">
@@ -201,16 +263,7 @@ export default function Story() {
         </div>
       </Sec>
 
-      {/* 03 */}
-      <section id="ch3" className="relative bg-night py-24 sm:py-32">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-black sm:h-16" aria-hidden /><div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-black sm:h-16" aria-hidden />
-        <div className="mx-auto max-w-5xl px-5 sm:px-10"><Title>Наше кіно</Title></div>
-        <Album keys={['dome', 'bereal', 'bw', 'domeSelfie']} title="Кадри нашого кіно" />
-        <div className="mx-auto mt-10 max-w-md space-y-4 px-5 text-center">
-          <Line cls="text-lg text-ivory/75">Ми дивилися різні фільми.</Line>
-          <Line d={.3} cls="font-serif text-3xl italic leading-snug">Але моя улюблена історія весь цей час була поруч зі мною.</Line>
-        </div>
-      </section>
+      <CinemaScene />
 
       {/* 04 */}
       <Sec id="ch4" bg="bg-wine">
