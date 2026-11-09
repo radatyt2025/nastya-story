@@ -325,8 +325,8 @@ export default function Story() {
         <Title cls="text-center">Футбол 0 : 1 Настя</Title>
         <div className="mt-10"><Scoreboard /></div>
         <Line cls="mt-8 text-center text-lg text-ivory/80">Переможець був очевидний ще до початку гри.</Line>
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
-          {['stadium', 'scarves', 'bqFoot', 'hug', 'real', 'real2'].map((k, i) => <div key={k} className={i % 2 ? 'mt-6' : ''}><Ph k={k} sizes="45vw" /></div>)}
+        <div className="relative mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
+          {['stadium', 'scarves', 'bqFoot', 'hug', 'real', 'real2'].map((k, i) => <motion.div key={k} initial={rm?false:{opacity:0,y:100,rotate:i%2?9:-9,scale:.8}} whileInView={{opacity:1,y:0,rotate:i%2?3:-3,scale:1}} viewport={{once:true,amount:.25}} transition={{duration:1.1,delay:(i%3)*.12,ease}} className={i % 2 ? 'mt-8' : ''}><Ph k={k} ratio="3/4" cls="rounded-xl ring-1 ring-gold/20" sizes="45vw" /></motion.div>)}
         </div>
         <Line cls="mx-auto mt-14 max-w-md text-center font-serif text-3xl italic leading-snug text-gold">Ти солодша за перемогу Реал Мадриду над Барселоною.</Line>
       </Sec>
@@ -334,9 +334,9 @@ export default function Story() {
       {/* 05 */}
       <Sec id="ch5" bg="bg-ivory text-wine">
         <Title>Двоє маленьких ведмедиків</Title>
-        <div className="mt-10 grid gap-6 md:grid-cols-5">
-          <div className="md:col-span-2"><Ph k="art" /></div>
-          <div className="space-y-6 md:col-span-3"><Ph k="bears" /><div className="mx-auto w-3/4"><Ph k="mirror" /></div></div>
+        <div className="relative mt-10 grid gap-6 md:grid-cols-5">
+          <motion.div initial={rm?false:{opacity:0,x:-100,rotate:-12}} whileInView={{opacity:1,x:0,rotate:-3}} viewport={{once:true}} transition={{duration:1.3,ease}} className="md:col-span-2"><Ph k="art" cls="rounded-2xl" /></motion.div>
+          <div className="space-y-6 md:col-span-3"><motion.div initial={rm?false:{opacity:0,x:110,rotate:10}} whileInView={{opacity:1,x:0,rotate:2}} viewport={{once:true}} transition={{duration:1.3,delay:.2,ease}}><Ph k="bears" cls="rounded-2xl" /></motion.div><motion.div initial={rm?false:{opacity:0,y:90,scale:.7}} whileInView={{opacity:1,y:0,scale:1}} viewport={{once:true}} transition={{duration:1.2,delay:.4,ease}} className="mx-auto w-4/5"><Ph k="mirror" cls="rounded-2xl" /></motion.div></div>
         </div>
         <div className="mx-auto mt-14 max-w-md space-y-4 text-center">
           <Line cls="font-serif text-3xl leading-snug">Маленькі ведмедики, які тепер теж мають свою історію.</Line>
