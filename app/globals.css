@@ -11,3 +11,21 @@ button { -webkit-tap-highlight-color: transparent; }
 .beam { background: conic-gradient(from 168deg at 50% -10%, transparent 0 4deg, rgba(246,240,232,.07) 6deg 14deg, transparent 16deg); animation: flick 4s ease-in-out infinite; }
 @keyframes flick { 50% { opacity: .55 } }
 @media (prefers-reduced-motion: reduce) { .grain, .beam { animation: none; } * { scroll-behavior: auto !important; } }
+
+
+/* Cinematic atmospheric design */
+.cinematic-chapter { isolation:isolate; overflow:hidden; }
+.cinematic-chapter > .mx-auto, .cinematic-chapter > .relative:not(.story-atmosphere) { position:relative; z-index:1; }
+.cinematic-chapter--wine { background-image:radial-gradient(ellipse at 85% 18%,rgba(231,163,150,.15),transparent 52%),linear-gradient(145deg,rgba(20,7,20,.28),transparent 65%); }
+.cinematic-chapter--paper { background-image:radial-gradient(ellipse at 0% 10%,rgba(180,100,117,.13),transparent 58%),radial-gradient(ellipse at 95% 95%,rgba(211,173,114,.14),transparent 50%); }
+.story-atmosphere { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.story-atmosphere__aurora { position:absolute; inset:-30%; background:radial-gradient(ellipse at 22% 35%,rgba(217,188,138,.16),transparent 35%),radial-gradient(ellipse at 78% 68%,rgba(199,80,123,.19),transparent 38%); filter:blur(32px); animation:story-aurora 17s ease-in-out infinite alternate; }
+.story-atmosphere--stars .story-atmosphere__aurora { background:radial-gradient(ellipse at 70% 35%,rgba(92,82,176,.22),transparent 38%),radial-gradient(ellipse at 20% 72%,rgba(187,88,144,.18),transparent 42%); }
+.story-atmosphere--gold .story-atmosphere__aurora { background:radial-gradient(ellipse at 30% 20%,rgba(238,181,106,.24),transparent 39%),radial-gradient(ellipse at 80% 85%,rgba(151,69,87,.18),transparent 38%); }
+.story-atmosphere--rose .story-atmosphere__aurora { background:radial-gradient(ellipse at 25% 25%,rgba(213,119,148,.19),transparent 40%),radial-gradient(ellipse at 80% 75%,rgba(217,188,138,.14),transparent 40%); }
+.story-atmosphere__spark { position:absolute; display:block; border-radius:50%; background:#f6dca7; box-shadow:0 0 13px 3px rgba(243,193,127,.45); }
+.story-atmosphere--rose .story-atmosphere__spark { background:#e5a1b8; box-shadow:0 0 13px 3px rgba(218,119,151,.38); }
+.chapter-transition { position:relative; z-index:2; display:flex; align-items:center; justify-content:center; gap:16px; padding:37px 18px; background:#141016; color:#d9bc8a; text-align:center; font-size:10px; line-height:1.8; letter-spacing:.32em; text-transform:uppercase; }
+.chapter-transition__line { flex:1; max-width:90px; height:1px; transform-origin:center; background:linear-gradient(90deg,transparent,rgba(217,188,138,.7),transparent); }
+@keyframes story-aurora { 0%{transform:translate3d(-3%,0,0) rotate(-4deg) scale(1)} 100%{transform:translate3d(4%,3%,0) rotate(5deg) scale(1.12)} }
+@media (prefers-reduced-motion:reduce){.story-atmosphere__aurora{animation:none}}
