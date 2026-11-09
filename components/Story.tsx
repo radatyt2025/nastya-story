@@ -112,7 +112,7 @@ function CinemaScene() {
         <motion.div aria-hidden className="pointer-events-none absolute -inset-5 rounded-[2rem] border border-gold/20 shadow-[0_0_90px_rgba(217,188,138,.13)]"
           animate={rm?{}:{boxShadow:['0 0 30px rgba(217,188,138,.08)','0 0 90px rgba(217,188,138,.2)','0 0 30px rgba(217,188,138,.08)']}}
           transition={{duration:5,repeat:Infinity}}/>
-        <Album keys={['bereal','dome','bw','domeSelfie']} title="Наші кадри" />
+        <Album keys={['bereal','dome','domeSelfie']} title="Наші кадри" />
       </div>
       <div className="mx-auto mt-16 max-w-md space-y-5 text-center">
         <Line cls="text-lg text-ivory/70">Ми дивилися різні фільми.</Line>
@@ -176,13 +176,68 @@ function Burst() {
   </div>;
 }
 
+
+/* ---------- Запрошення: вибір середи та часу ---------- */
+const WEDNESDAYS = [
+  {value:'2026-11-11',label:'11 листопада'},
+  {value:'2026-11-18',label:'18 листопада'},
+  {value:'2026-11-25',label:'25 листопада'}
+];
+const HOURS = ['17:00','17:30','18:00','18:30','19:00','19:30','20:00'];
+function Invitation() {
+  const [opened,setOpened]=useState(false);
+  const [date,setDate]=useState('2026-11-11');
+  const [time,setTime]=useState('18:00');
+  const [copied,setCopied]=useState(false);
+  const rm=useReducedMotion();
+  const day=WEDNESDAYS.find(d=>d.value===date)?.label ?? date;
+  const message=`Привіт! Я обираю нашу зустріч у середу, ${day}, о ${time} ♡`;
+  const share=()=>{ window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(message)}`,'_blank','noopener,noreferrer'); };
+  const copy=async()=>{try{await navigator.clipboard.writeText(message);setCopied(true);}catch{setCopied(false);}};
+  return <section id="ch8" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#180d19] px-5 py-28 text-center text-ivory">
+    <FloatingLights/>
+    <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(125,45,77,.55),transparent_70%)]"/>
+    <div className="relative mx-auto w-full max-w-xl">
+      <motion.p initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="mb-5 text-xs uppercase tracking-[.35em] text-gold">Для тебе, Настю</motion.p>
+      <Title cls="text-center">А як щодо ще одного побачення?</Title>
+      <Line cls="mx-auto mt-6 max-w-md text-lg text-ivory/75">З тебе — гарний настрій і трішки часу. Решту залиш мені ♡</Line>
+      {!opened ? <motion.button type="button" onClick={()=>setOpened(true)} whileTap={{scale:.96}}
+        initial={rm?false:{opacity:0,y:60,rotate:-8}} whileInView={{opacity:1,y:0,rotate:0}} viewport={{once:true}} transition={{duration:1.1,ease}}
+        className="group relative mx-auto mt-16 block h-52 w-full max-w-sm overflow-hidden rounded-xl border border-gold/50 bg-[#a56b79] shadow-[0_30px_100px_rgba(0,0,0,.5)]">
+        <div className="absolute inset-x-0 top-0 h-28 origin-top bg-[#bd8994] [clip-path:polygon(0_0,100%_0,50%_100%)]"/>
+        <span className="relative mt-12 inline-block rounded-full border border-ivory/60 px-6 py-3 font-serif text-2xl italic">Відкрити лист ♡</span>
+        <span className="absolute bottom-5 left-0 right-0 text-xs tracking-widest">Торкнися конверта</span>
+      </motion.button> :
+      <motion.div initial={rm?false:{opacity:0,y:90,rotateX:-22,scale:.85}} animate={{opacity:1,y:0,rotateX:0,scale:1}} transition={{duration:1.2,ease}}
+        className="mx-auto mt-12 rounded-[2rem] border border-gold/50 bg-[#f6f0e8] p-6 text-[#4a1728] shadow-[0_30px_100px_rgba(0,0,0,.5)] sm:p-9">
+        <p className="font-hand text-3xl">Наш наступний розділ</p>
+        <p className="mt-4 font-serif text-3xl italic">Побачимось у середу?</p>
+        <fieldset className="mt-8">
+          <legend className="mb-3 text-sm font-medium">Обери дату — середу</legend>
+          <div className="grid grid-cols-3 gap-2">{WEDNESDAYS.map(d=><button key={d.value} type="button" onClick={()=>setDate(d.value)}
+            aria-pressed={date===d.value} className={`min-h-14 rounded-xl border px-2 py-3 text-sm transition-colors ${date===d.value?'border-wine bg-wine text-ivory':'border-wine/20 bg-white/60'}`}>{d.label}</button>)}</div>
+        </fieldset>
+        <fieldset className="mt-7">
+          <legend className="mb-3 text-sm font-medium">О котрій годині тобі зручно?</legend>
+          <div className="grid grid-cols-3 gap-2">{HOURS.map(t=><button key={t} type="button" onClick={()=>setTime(t)}
+            aria-pressed={time===t} className={`min-h-12 rounded-xl border text-sm transition-colors ${time===t?'border-wine bg-wine text-ivory':'border-wine/20 bg-white/60'}`}>{t}</button>)}</div>
+        </fieldset>
+        <p className="mt-6 font-serif text-xl">Середа, {day} · {time}</p>
+        <button type="button" onClick={share} className="mt-6 min-h-14 w-full rounded-full bg-wine px-5 font-medium text-ivory">Надіслати вибір у Telegram ↗</button>
+        <button type="button" onClick={copy} className="mt-3 min-h-12 w-full rounded-full border border-wine/30 px-5 text-sm">{copied?'Скопійовано ✓':'Скопіювати запрошення'}</button>
+        <p className="mt-4 text-xs leading-relaxed text-wine/60">Вибір не надсилається автоматично — підтверди повідомлення у Telegram.</p>
+      </motion.div>}
+    </div>
+  </section>;
+}
+
 /* ---------- сторінка ---------- */
 const L7 = ['Знаєш, Настю…', 'Я міг би ще довго згадувати всі наші моменти.', 'Але є дещо важливіше.', 'Я хочу, щоб таких моментів було ще більше.', 'І хочу проживати їх саме з тобою.'];
 
 export default function Story() {
   const lenis = useRef<Lenis | null>(null); const rm = useReducedMotion();
   const [started, setStarted] = useState(false); const [step, setStep] = useState(0); const [finale, setFinale] = useState(false);
-  const [answered, setAnswered] = useState(false); const [lb, setLb] = useState<string | null>(null);
+  const [lb, setLb] = useState<string | null>(null);
   const [music, setMusic] = useState<'off' | 'on' | 'none'>('off'); const audio = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -295,7 +350,7 @@ export default function Story() {
         <div className="mt-10 -mx-5 sm:mx-0"><Para amt={30}><div className="[&_button]:!shadow-[0_0_80px_-20px_rgba(216,164,178,.5)]"><Ph k="bw" sizes="100vw" /></div></Para></div>
         <div className="relative mt-12 grid grid-cols-6 gap-3">
           <div className="col-span-3 -rotate-2"><Ph k="glasses" /></div><div className="col-span-3 mt-12 rotate-2"><Ph k="embrace" /></div>
-          <div className="col-span-2 -mt-2 rotate-1"><Ph k="night1" /></div><div className="col-span-2 mt-8 -rotate-2"><Ph k="night2" /></div><div className="col-span-2 rotate-2"><Ph k="night3" /></div>
+          
         </div>
         <div className="mx-auto mt-16 max-w-md space-y-3 text-center font-serif text-2xl leading-snug">
           {['Мені подобаються наші розмови.', 'Наші жарти.', 'Наші обійми.', 'І навіть ті фотографії, на яких ми просто дуріємо.'].map((t, i) => <Line key={t} d={i * .1}>{t}</Line>)}
@@ -315,28 +370,7 @@ export default function Story() {
         </div>
       </section>
 
-      {/* 08 */}
-      {finale && <section id="ch8" className="relative grid min-h-[100svh] place-items-center overflow-hidden bg-[radial-gradient(ellipse_at_50%_40%,#6b2339_0%,#4A1728_45%,#101014_100%)] px-6 py-20 text-center">
-        {answered && <Burst />}
-        <div className="relative max-w-2xl">
-          <AnimatePresence mode="wait">
-            {!answered ? (
-              <motion.div key="q" exit={{ opacity: 0, y: -20 }} transition={{ duration: .6 }}>
-                <motion.h2 initial={{ opacity: 0, filter: 'blur(10px)' }} animate={{ opacity: 1, filter: 'blur(0px)' }} transition={{ duration: 2, ease }} className="font-serif text-5xl font-medium italic leading-[1.08] sm:text-7xl">Настю, ти будеш моєю дівчиною?</motion.h2>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8, duration: 1.2 }} className="mt-12 flex flex-col items-stretch gap-4 sm:flex-row sm:justify-center">
-                  {['Так ❤️', 'Звісно так ❤️'].map((t) => <motion.button key={t} whileTap={{ scale: .96 }} onClick={() => setAnswered(true)}
-                    className="min-h-14 rounded-full bg-gold px-10 text-lg font-medium text-night shadow-[0_0_40px_-6px_rgba(217,188,138,.7)]">{t}</motion.button>)}
-                </motion.div>
-              </motion.div>
-            ) : (
-              <motion.div key="a" initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.6, delay: .5, ease }}>
-                <p className="font-serif text-4xl italic leading-snug sm:text-6xl">Тоді це тільки початок нашої історії ❤️</p>
-                <p className="mt-10 font-hand text-4xl text-gold">М.К. + Н.</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </section>}
+      {finale && <Invitation />}
 
       <Lightbox k={lb} onClose={() => setLb(null)} />
     </Open.Provider>
