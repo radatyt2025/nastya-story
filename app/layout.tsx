@@ -6,7 +6,7 @@ const serif = Cormorant_Garamond({ subsets: ['cyrillic', 'latin'], weight: ['400
 const sans = Inter({ subsets: ['cyrillic', 'latin'], variable: '--f-sans' });
 const hand = Marck_Script({ subsets: ['cyrillic', 'latin'], weight: '400', variable: '--f-hand' });
 
-export const metadata: Metadata = { title: 'Наш маленький всесвіт', description: 'Історія для Насті', robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: 'Special Evening ♡ | Для Насті', description: 'Особливий вечір. Наша історія — і ще один спогад попереду.', robots: { index: false, follow: false } };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#101014' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
