@@ -215,7 +215,6 @@ function Invitation() {
     <FloatingLights/><Atmosphere kind="rose"/>
     <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(125,45,77,.55),transparent_70%)]"/>
     <div className="relative mx-auto w-full max-w-xl">
-      <motion.p initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="mb-5 text-xs uppercase tracking-[.35em] text-gold">Для тебе, Настю</motion.p>
       <Title cls="text-center">А як щодо ще одного побачення?</Title>
       <Line cls="mx-auto mt-6 max-w-md text-lg text-ivory/75">З тебе — гарний настрій і трішки часу. Решту залиш мені ♡</Line>
       {!opened ? <motion.button type="button" onClick={()=>setOpened(true)} whileTap={{scale:.96}}
