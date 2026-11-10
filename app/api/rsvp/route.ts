@@ -9,7 +9,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Некоректна дата або час' }, { status: 400 });
     }
     const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const key = process.env.SUPABASE_PUBLISHABLE_KEY;
     if (!url || !key) return NextResponse.json({ error: 'Базу даних ще не підключено' }, { status: 503 });
     const res = await fetch(`${url.replace(/\/$/,'')}/rest/v1/meeting_rsvps`, {
       method:'POST',
