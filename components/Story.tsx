@@ -116,7 +116,7 @@ function CinemaScene() {
         <motion.div aria-hidden className="pointer-events-none absolute -inset-5 rounded-[2rem] border border-gold/20 shadow-[0_0_90px_rgba(217,188,138,.13)]"
           animate={rm?{}:{boxShadow:['0 0 30px rgba(217,188,138,.08)','0 0 90px rgba(217,188,138,.2)','0 0 30px rgba(217,188,138,.08)']}}
           transition={{duration:5,repeat:Infinity}}/>
-        <Album keys={['bereal','dome','domeSelfie']} title="Наші кадри" />
+        <Album keys={['dome','bereal','domeSelfie']} title="Наші кадри" />
       </div>
       <div className="mx-auto mt-16 max-w-md space-y-5 text-center">
         <Line cls="text-lg text-ivory/70">Ми дивилися різні фільми.</Line>
@@ -143,9 +143,7 @@ function ParkScene() {
           <Ph k="night2" ratio="3/4" cls="rounded-sm"/>
         </motion.div>
       </div>
-      <motion.div initial={rm?false:{opacity:0,y:70,scale:.8}} whileInView={{opacity:1,y:0,scale:1}} viewport={{once:true}} transition={{duration:1.2}} className="mx-auto max-w-sm">
-        <Ph k="night3" ratio="4/5" cls="rounded-2xl"/>
-      </motion.div>
+
     </div>
   </section>;
 }
@@ -208,6 +206,10 @@ const HOURS = ['17:00','17:30','18:00','18:30','19:00','19:30','20:00'];
 function Invitation() {
   const [opened,setOpened]=useState(false);
   const [time,setTime]=useState('18:00');
+  const [saving,setSaving]=useState(false);
+  const [confirmed,setConfirmed]=useState(false);
+  const [error,setError]=useState('');
+  const confirm=async()=>{setSaving(true);setError('');try{const r=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:'2026-11-11',time})});if(!r.ok)throw new Error('save');setConfirmed(true);}catch{setError('Не вдалося зберегти вибір. Спробуй ще раз.');}finally{setSaving(false);}};
   const rm=useReducedMotion();
   return <section id="ch8" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#180d19] px-5 py-28 text-center text-ivory">
     <FloatingLights/><Atmosphere kind="rose"/>
@@ -231,16 +233,18 @@ function Invitation() {
           <p className="text-xs uppercase tracking-[.3em] text-wine/60">Наш день</p>
           <p className="mt-2 font-serif text-3xl italic">Середа, 11 листопада</p>
         </motion.div>
-        <fieldset className="mt-7">
+        {!confirmed && <fieldset className="mt-7">
           <legend className="mb-3 text-sm font-medium">О котрій годині тобі зручно?</legend>
           <div className="grid grid-cols-3 gap-2">{HOURS.map(t=><button key={t} type="button" onClick={()=>setTime(t)}
             aria-pressed={time===t} className={`min-h-12 rounded-xl border text-sm transition-colors ${time===t?'border-wine bg-wine text-ivory':'border-wine/20 bg-white/60'}`}>{t}</button>)}</div>
-        </fieldset>
+        </fieldset>}
         <motion.div key={time} initial={{opacity:0,scale:.92}} animate={{opacity:1,scale:1}} className="mt-8 rounded-2xl bg-wine px-5 py-6 text-ivory">
           <p className="text-xs uppercase tracking-[.25em] text-ivory/70">Наше наступне побачення</p>
           <p className="mt-2 font-serif text-3xl italic">Середа · 11 листопада · {time}</p>
-          <p className="mt-3 text-sm text-ivory/75">Я чекатиму на тебе ♡</p>
+          <p className="mt-3 text-sm text-ivory/75">{confirmed ? "Домовились! Чекатиму на тебе ♡" : "Обери зручний час і підтвердь зустріч ♡"}</p>
         </motion.div>
+        {!confirmed && <button type="button" onClick={confirm} disabled={saving} className="mt-5 min-h-14 w-full rounded-full bg-wine px-6 font-medium text-ivory disabled:opacity-60">{saving?'Зберігаю…':'Підтвердити зустріч ♡'}</button>}
+        {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
       </motion.div>}
     </div>
   </section>;
