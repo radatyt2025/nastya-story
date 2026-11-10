@@ -108,7 +108,7 @@ function CinemaScene() {
   return <section id="ch3" className="relative overflow-hidden bg-[#0d0b12] px-5 py-28 text-ivory sm:px-10 cinematic-chapter"><Atmosphere kind="stars"/>
     <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(ellipse_at_top,rgba(255,236,190,.22),transparent_70%)]"/>
     <div className="mx-auto max-w-5xl">
-      <p className="mb-5 text-center text-xs uppercase tracking-[.4em] text-gold/70">Сцена третя · Наше кіно</p>
+      
       <motion.div initial={rm?false:{opacity:0,scale:.85,filter:'blur(14px)'}} whileInView={{opacity:1,scale:1,filter:'blur(0px)'}} viewport={{once:true}} transition={{duration:1.2}}>
         <Title cls="text-center">У кожної історії є свої кадри</Title>
       </motion.div>
@@ -130,7 +130,7 @@ function ParkScene() {
   return <section id="park" className="relative overflow-hidden bg-[#151b23] px-5 py-28 text-ivory sm:px-10 cinematic-chapter"><Atmosphere kind="stars"/>
     <FloatingLights/>
     <div className="relative mx-auto max-w-5xl">
-      <p className="mb-5 text-xs uppercase tracking-[.35em] text-gold/70">Сцена друга · Стрийський парк</p>
+      
       <Title>Трохи вечірнього світла. І ти.</Title>
       <Line cls="mt-6 max-w-md font-serif text-2xl italic text-ivory/75">Іноді для особливого вечора достатньо просто бути поруч.</Line>
       <div className="relative mx-auto mt-16 max-w-lg pb-20">
@@ -299,7 +299,7 @@ export default function Story() {
 
       {/* 01 — перша зустріч */}
       <Sec id="ch1" bg="bg-wine cinematic-chapter cinematic-chapter--wine">
-        <p className="mb-6 text-xs uppercase tracking-[.35em] text-gold/80">Сцена перша · Перша зустріч</p>
+        
         <Title>Все почалося з однієї зустрічі</Title>
         <div className="mt-12 grid gap-12 md:grid-cols-2 md:items-center">
           <motion.div initial={rm?false:{opacity:0,scale:1.2,filter:'blur(15px)'}} whileInView={{opacity:1,scale:1,filter:'blur(0px)'}} viewport={{once:true}} transition={{duration:1.7,ease}}>
@@ -319,7 +319,7 @@ export default function Story() {
       <ParkScene />
 
       {/* 02 */}
-      <ChapterTransition label="Наші маленькі моменти"/><Sec id="ch2" bg="bg-ivory text-wine cinematic-chapter cinematic-chapter--paper">
+      <Sec id="ch2" bg="bg-ivory text-wine cinematic-chapter cinematic-chapter--paper">
         <Title>Маленькі моменти. Великі почуття.</Title>
         <div className="mt-10 grid grid-cols-6 gap-3 sm:gap-6">
           <div className="col-span-4 -rotate-2"><Ph k="letter" /></div>
@@ -333,10 +333,10 @@ export default function Story() {
         </div>
       </Sec>
 
-      <ChapterTransition label="Магія великого екрана"/><CinemaScene />
+      <CinemaScene />
 
       {/* 04 */}
-      <ChapterTransition label="Гра, яку я програв із задоволенням"/><Sec id="ch4" bg="bg-wine cinematic-chapter cinematic-chapter--wine">
+      <Sec id="ch4" bg="bg-wine cinematic-chapter cinematic-chapter--wine">
         <div className="mt-2"><Scoreboard /></div>
         <Line cls="mt-8 text-center text-lg text-ivory/80">Переможець був очевидний ще до початку гри.</Line>
         <div className="relative mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
@@ -346,7 +346,7 @@ export default function Story() {
       </Sec>
 
       {/* 05 */}
-      <ChapterTransition label="Створено удвох"/><Sec id="ch5" bg="bg-ivory text-wine cinematic-chapter cinematic-chapter--paper">
+      <Sec id="ch5" bg="bg-ivory text-wine cinematic-chapter cinematic-chapter--paper">
         <Title>Двоє маленьких ведмедиків</Title>
         <div className="relative mt-10 grid gap-6 md:grid-cols-5">
           <motion.div initial={rm?false:{opacity:0,x:-100,rotate:-12}} whileInView={{opacity:1,x:0,rotate:-3}} viewport={{once:true}} transition={{duration:1.3,ease}} className="md:col-span-2"><Ph k="art" cls="rounded-2xl" /></motion.div>
@@ -359,7 +359,7 @@ export default function Story() {
       </Sec>
 
       {/* 06 */}
-      <ChapterTransition label="Те, що залишиться з нами"/><Sec id="ch6" bg="bg-night cinematic-chapter">
+      <Sec id="ch6" bg="bg-night cinematic-chapter">
         <Title>Моменти, які хочеться зупинити</Title>
         <div className="mt-10 -mx-5 sm:mx-0"><Para amt={30}><div className="[&_button]:!shadow-[0_0_80px_-20px_rgba(216,164,178,.5)]"><Ph k="bw" sizes="100vw" /></div></Para></div>
         <div className="relative mt-12 grid grid-cols-6 gap-3">
