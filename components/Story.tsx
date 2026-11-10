@@ -7,7 +7,7 @@ import { P } from '@/lib/photos';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const crop: Record<string, string> = {
-  bq1: '50% 67%', bq2: '50% 67%', bereal: '50% 62%',
+  bq1: '50% 50%', bq2: '50% 50%', bereal: '50% 62%',
   roses: '50% 75%', real2: '50% 48%'
 };
 const Open = createContext<(k: string) => void>(() => {});
@@ -22,7 +22,7 @@ function Ph({ k, cls = '', ratio, pos = 'center', rot = 0, priority = false, siz
       viewport={{ once: true, margin: '-8%' }} transition={{ duration: 1.3, ease }}
       style={{ aspectRatio: ratio ?? `${p.w}/${p.h}` }}
       className={`relative block w-full overflow-hidden bg-black/30 shadow-[0_24px_60px_-20px_rgba(0,0,0,.7)] ${cls}`}>
-      <Image src={`/photos/${p.f}`} alt={p.alt} fill sizes={sizes} priority={priority} className="object-cover" style={{ objectPosition: crop[k] ?? pos, transform: ['bq1','bq2','roses'].includes(k) ? 'scale(1.5)' : crop[k] ? 'scale(1.24)' : undefined }} />
+      <Image src={`/photos/${p.f}`} alt={p.alt} fill sizes={sizes} priority={priority} className="object-cover" style={{ objectPosition: crop[k] ?? pos, transform: ['bq1','bq2'].includes(k) ? 'scale(2.15)' : k === 'roses' ? 'scale(1.5)' : crop[k] ? 'scale(1.24)' : undefined }} />
     </motion.button>
   );
 }
@@ -52,7 +52,7 @@ function Lightbox({ k, onClose }: { k: string | null; onClose: () => void }) {
         <div className="relative mx-auto h-full w-full max-w-3xl overflow-hidden">
           <Image src={`/photos/${P[k].f}`} alt={P[k].alt} fill sizes="100vw"
             className={['bq1','bq2','roses'].includes(k) ? 'object-cover' : 'object-contain'}
-            style={['bq1','bq2','roses'].includes(k) ? {objectPosition:crop[k],transform:'scale(1.5)'} : undefined}/>
+            style={['bq1','bq2','roses'].includes(k) ? {objectPosition:crop[k],transform:['bq1','bq2'].includes(k)?'scale(2.15)':'scale(1.5)'} : undefined}/>
         </div>
         <button aria-label="Закрити" onClick={onClose} className="absolute right-4 top-[max(1rem,env(safe-area-inset-top))] grid h-12 w-12 place-items-center rounded-full bg-night/70 text-2xl text-ivory ring-1 ring-gold/40">×</button>
       </motion.div>)}
